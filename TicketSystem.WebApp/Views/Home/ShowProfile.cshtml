@@ -1,0 +1,100 @@
+﻿@using TicketSystem.Entities
+@model Users
+@{
+    ViewBag.Title = "ShowProfile";
+}
+
+<div class="container">
+    <div class="row">
+        <br /><br /><br />
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>@(Model.Name + " " + Model.Surname)</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="~/Images/dp.jpeg" class="img-circle img-responsive"> </div>
+
+                        <div class=" col-md-9 col-lg-9 ">
+                            <table class="table table-user-information">
+                                <tbody>
+                                    <tr>
+                                        <td>Department : </td>
+                                        <td>@Model.Department</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Register date : </td>
+                                        <td>@Model.CreatedOn.Year</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Email : </td>
+                                        <td><a href="mailto:@Model.Email">@Model.Email</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone Number : </td>
+                                        <td>
+                                            @Model.Phone
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Account Type : </td>
+                                        <td>
+                                            @{
+                                                switch (Model.IsAuth)
+                                                {
+                                                    case true:
+                                                        TempData["type"] = "IT Staff";
+                                                        break;
+                                                    case false:
+                                                        TempData["type"] = "Standard";
+                                                        break;
+                                                }
+                                            }
+                                            @TempData["type"]
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="pull-right">
+                                <a href="#" id="pcInfo" class="btn btn-info" data-toggle="modal" data-target="#modal_pcInfo" data-user-id="@Model.Id"><span class="glyphicon glyphicon-hdd"></span> <strong>PC Information</strong></a>
+                                <a href="#" data-toggle="modal" data-target="#modal_ticket" class="btn btn-primary"  data-user-id="@Model.Id"><span class="glyphicon glyphicon-th-large"></span> Tickets</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+                    <span class="pull-right">
+                        <a href="/Home/EditProfile" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-warning"><span class="glyphicon glyphicon-edit"></span></a>
+                        <a href="/Home/RemoveProfile" onclick="return confirm('Hesabınızı silmek istediğinize emin misiniz?')" data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></a>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@Bootstrap.ModalPopup(id: "modal_pcInfo", title: "Computer Details")
+@Bootstrap.ModalPopup(id:"modal_ticket", title:"Tickets")
+
+<script>
+    $(function () {
+        var userid = -1;
+        $('#modal_pcInfo').on('show.bs.modal', function (e) {
+            var btn = $(e.relatedTarget);
+            userid = btn.data("user-id");
+
+            $("#modal_pcInfo_body").load("/Pc/GetPcDetail/" + userid);
+        })
+        $('#modal_ticket').on('show.bs.modal', function (e) {
+            var btn = $(e.relatedTarget);
+            userid = btn.data("user-id");
+
+            $("#modal_ticket_body").load("/Ticket/GetTicketsById/" + userid);
+        })
+    });
+
+</script>

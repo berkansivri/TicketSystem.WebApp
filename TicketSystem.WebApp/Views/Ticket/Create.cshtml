@@ -1,0 +1,40 @@
+﻿@using TicketSystem.Entities
+@model Ticket
+@{
+    ViewBag.Title = "Create";
+}
+<br /><br />
+<div class="container">
+    <div class="col-md-4 col-md-offset-4 text-center">
+        <strong class="">Create New Ticket</strong>
+        <hr />
+    </div>
+    @using (Html.BeginForm("Create", "Ticket", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(false)
+        <div class="row">
+            <div class="col-md-5 col-md-push-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.TextBoxFor(Model => Model.Title, new { @class = "form-control", placeholder = "Title" })
+                </div>
+                <br />
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.TextAreaFor(Model => Model.Text,5,30, new { @class = "form-control", placeholder = "Description" })
+                </div>
+                <br />
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Img, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <input type="file" name="ticketImg" id="ticketImg" class="form-control" /><br />
+                    <p class="small text-center"><span class="glyphicon glyphicon-info-sign"></span>&nbsp;Please use a JPG, JPEG or PNG. (max 5mb)</p>
+                </div>
+                <br />
+                <button class="btn btn-success center-block" type="submit"><span class="glyphicon glyphicon-send"></span> Send</button>
+            </div>
+        </div>
+    }
+    
+</div>

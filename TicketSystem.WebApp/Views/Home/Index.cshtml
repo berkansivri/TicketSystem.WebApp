@@ -1,0 +1,150 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+@using TicketSystem.Entities
+@model List<Ticket>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>3 Col Portfolio - Start Bootstrap Template</title>
+    <link href="/Content/3-col-portfolio.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Ticket System
+                    <small>lets start</small>
+                </h1>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- Projects Row -->
+        <div class="row">
+
+            <div class="col-md-3">
+                <p class="lead">Tickets</p>
+                <div class="list-group">
+                    <a href="/Home/" class="list-group-item list-group-item-info">All</a>
+                    <a href="/Home/Filter/2" class="list-group-item list-group-item-success">Solved</a>
+                    <a href="/Home/Filter/3" class="list-group-item list-group-item-warning">Unsolved</a>
+                </div>
+            </div>
+
+
+            <div class="col-md-9">
+                @foreach (Ticket ticket in Model)
+            {
+                <div class="col-md-offset-1 col-md-5 portfolio-item" data-toggle="modal" data-target="#modal_ticketdetail" data-ticket-id="@ticket.Id">
+                    <a href="#">
+                        <img class="img-responsive img-thumbnail" src="@ticket.Img" alt="SS">
+                    </a>
+                    <h3>
+                        <a href="#">@ticket.Title</a>
+                    </h3>
+                    <p>@ticket.Text</p>
+                    @if (ticket.IsSolved)
+                    {
+                        <div class="checkbox pull-right">
+                            <label class="remember">
+                                <input name="remember" type="checkbox" readonly="readonly" style="transform:scale(1.5)" checked="checked" disabled="disabled"> Solved
+                            </label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="checkbox pull-right">
+                            <label class="remember">
+                                <input name="remember" type="checkbox" readonly="readonly" style="transform:scale(1.5)" disabled="disabled"> Solved
+                            </label>
+                        </div>
+
+                    }
+                </div>
+            }
+        </div>
+
+            <!-- /.row -->
+            <hr>
+            <!-- Pagination -->
+            <div class="row text-center">
+                <div class="col-lg-12">
+                    <ul class="pagination">
+                        <li>
+                            <a href="#">&laquo;</a>
+                        </li>
+                        <li class="active">
+                            <a href="#">1</a>
+                        </li>
+                        <li>
+                            <a href="#">2</a>
+                        </li>
+                        <li>
+                            <a href="#">3</a>
+                        </li>
+                        <li>
+                            <a href="#">4</a>
+                        </li>
+                        <li>
+                            <a href="#">5</a>
+                        </li>
+                        <li>
+                            <a href="#">&raquo;</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /.row -->
+            <hr>
+            <!-- Footer -->
+            <footer>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p>Copyright &copy; 2017</p>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
+
+@Bootstrap.ModalPopup(id: "modal_ticketdetail", title: "Ticket Details");
+
+<script>
+    var ticketid = -1;
+    $(function () {
+        $("#modal_ticketdetail").on('show.bs.modal', function (e) {
+            var btn = $(e.relatedTarget);
+            ticketid = btn.data("ticket-id");
+
+            $("#modal_ticketdetail_body").load("/Ticket/GetDetailsById/" + ticketid);
+            $("#modal_ticketdetail_footer").load("/Ticket/IsSolved/" + ticketid);
+        })
+    });
+
+   function clickSolve(btn) {
+        var button = $(btn);
+        
+            $.ajax({
+                method: "POST",
+                url: "/Ticket/Solving",
+                data: { "id": ticketid }
+            }).done(function () {
+                    $("#modal_ticketdetail_footer").load("/Ticket/IsSolved/" + ticketid);
+            }).fail(function () {
+                alert("Connection to server failed.");
+            });
+    }
+</script>

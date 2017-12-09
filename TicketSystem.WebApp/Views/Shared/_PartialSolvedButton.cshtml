@@ -1,0 +1,28 @@
+﻿@using TicketSystem.WebApp.Models
+@using TicketSystem.Entities
+@model Ticket
+
+@if (CurrentSession.user!=null && CurrentSession.user.IsAuth == true)
+{
+    if (Model.IsSolved)
+    {
+        <button type="button" onclick="clickSolve(this);" class="btn btn-warning"><span class="glyphicon glyphicon-remove"></span> UnSolved</button>
+    }
+
+    else
+    {
+        <button type="button" onclick="clickSolve(this);" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Solved</button>
+    }
+}
+else if(CurrentSession.user != null && CurrentSession.user.IsAuth == false)
+{
+    if (Model.IsSolved)
+    {
+        <button type="button" disabled="disabled" onclick="clickSolve(this);" class="btn btn-warning"><span class="glyphicon glyphicon-remove"></span> UnSolved</button>
+    }
+
+    else
+    {
+        <button type="button" disabled="disabled" onclick="clickSolve(this);" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Solved</button>
+    }
+}

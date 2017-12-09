@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "An error occurred";
+}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        @{
+            Exception ex = null;
+
+            if (TempData["LastError"] != null)
+            {
+                ex = TempData["LastError"] as Exception;
+            }
+        }
+        <h1><span class="glyphicon glyphicon-remove"></span> Hata Oluştu</h1>
+        <p>
+            An error occurred. Please contact with website administrator.
+            <br /><br /><br />
+            @if (ex != null)
+            {
+                <strong>Error Information : </strong>
+                @ex.Message
+                <br /><br /><br />
+            }
+        </p>
+    </div>
+</div>
